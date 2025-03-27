@@ -1,0 +1,67 @@
+{
+    "name": "vbeautify",
+    "displayName": "vbeautify",
+    "description": "",
+    "version": "0.0.1",
+    "publisher": "yinxianwei",
+    "engines": {
+        "vscode": "^1.98.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onLanguage:vue"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "vue",
+                "extensions": [
+                    ".vue"
+                ]
+            }
+        ],
+        "grammars": [],
+        "commands": [],
+        "keybindings": [],
+        "documentFormatting": [
+            {
+                "language": "vue",
+                "register": true
+            }
+        ]
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "lint": "eslint src",
+        "test": "vscode-test",
+        "package": "tsc -p ./ && vsce package"
+    },
+    "devDependencies": {
+        "@types/js-beautify": "^1.14.3",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.98.0",
+        "@typescript-eslint/eslint-plugin": "^8.28.0",
+        "@typescript-eslint/parser": "^8.28.0",
+        "@vscode/test-cli": "^0.0.10",
+        "@vscode/test-electron": "^2.4.1",
+        "eslint": "^9.23.0",
+        "typescript": "^5.8.2",
+        "vsce": "^2.15.0"
+    },
+    "dependencies": {
+        "@types/eslint-scope": "^3.7.7",
+        "@vue/compiler-sfc": "^3.5.13",
+        "js-beautify": "^1.15.4",
+        "prettier": "^3.5.3"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yinxianwei/vbeautify"
+    }
+}
