@@ -25,13 +25,15 @@ const DEFAULT_PRETTIER_CONFIG: prettier.Options = {
     useTabs: false,
     embeddedLanguageFormatting: 'auto',
     vueIndentScriptAndStyle: false,
-    experimentalTernaries: false,
+    experimentalTernaries: false
 };
 export function formatHtml(content: string): string {
+    const htmlConfig = vscode.workspace.getConfiguration('html.format');
     const formatOptions: HTMLBeautifyOptions = {
         wrap_attributes: 'force-aligned',
         wrap_line_length: 150,
         unformatted: ['area', 'base', 'br', 'col', 'embed', 'hr', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'],
+        ...htmlConfig
     };
     return beautify.html(content, formatOptions);
 }
@@ -42,7 +44,7 @@ export async function formatJs(content: string): Promise<string> {
             let config = await getPrettierConfig();
             return await prettier.format(content, {
                 parser: 'babel',
-                ...config,
+                ...config
             });
         } catch (error) {
             console.error(error);
@@ -57,7 +59,7 @@ export async function formatCss(content: string, lang: string): Promise<string> 
             let config = await getPrettierConfig();
             return await prettier.format(content, {
                 parser: lang,
-                ...config,
+                ...config
             });
         } catch (error) {
             console.error(error);
@@ -69,16 +71,15 @@ export async function formatCss(content: string, lang: string): Promise<string> 
 export async function getPrettierConfig(): Promise<prettier.Options> {
     const workspacePath = vscode.workspace.workspaceFolders![0].uri.fsPath;
     const prettierConfigPath = path.join(workspacePath, '.prettierrc');
-    let config = await prettier.resolveConfig(prettierConfigPath, {
-        useCache: false,
+    const config = await prettier.resolveConfig(prettierConfigPath, {
+        useCache: false
     });
-    if (config) {
-        return {
-            ...DEFAULT_PRETTIER_CONFIG,
-            ...config,
-        };
-    }
-    return DEFAULT_PRETTIER_CONFIG;
+    const prettierConfig = vscode.workspace.getConfiguration('prettier');
+    return {
+        ...DEFAULT_PRETTIER_CONFIG,
+        ...prettierConfig,
+        ...config
+    };
 }
 export function getText(document: vscode.TextDocument, startLine: number, endLine: number): string {
     const startPosition = new vscode.Position(startLine, 0);
@@ -105,7 +106,7 @@ export async function formattingVue(document: vscode.TextDocument) {
                 type: 'template',
                 text: text,
                 formatText: formatText,
-                range: range,
+                range: range
             });
         }
     }
@@ -122,7 +123,7 @@ export async function formattingVue(document: vscode.TextDocument) {
                     type: 'script',
                     text: text,
                     formatText: formatText,
-                    range: range,
+                    range: range
                 });
             }
         }
@@ -143,7 +144,7 @@ export async function formattingVue(document: vscode.TextDocument) {
                     type: 'script',
                     text: text,
                     formatText: formatText,
-                    range: range,
+                    range: range
                 });
             }
         }
@@ -163,7 +164,7 @@ export async function formattingVue(document: vscode.TextDocument) {
                         type: 'style',
                         text: text,
                         formatText: formatText,
-                        range: range,
+                        range: range
                     });
                 }
             }
