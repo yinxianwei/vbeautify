@@ -38,12 +38,12 @@ export function formatHtml(content: string): string {
     return beautify.html(content, formatOptions);
 }
 
-export async function formatJs(content: string): Promise<string> {
+export async function formatScript(content: string, parser: prettier.LiteralUnion<prettier.BuiltInParserName>): Promise<string> {
     if (content) {
         try {
             let config = await getPrettierConfig();
             return await prettier.format(content, {
-                parser: 'babel',
+                parser,
                 ...config
             });
         } catch (error) {
@@ -115,7 +115,7 @@ export async function formattingVue(document: vscode.TextDocument) {
         const endPosition = new vscode.Position(descriptor.script.loc.end.line - 1, document.lineAt(descriptor.script.loc.end.line - 1).text.length);
         let range = new vscode.Range(startPosition, endPosition);
         const text = document.getText(range);
-        let res = await formatJs(descriptor.script.content);
+        let res = await formatScript(descriptor.script.content, 'babel');
         if (res) {
             let formatText = text.replace(descriptor.script.content, `\n${res}`);
             if (text !== formatText) {
@@ -136,7 +136,7 @@ export async function formattingVue(document: vscode.TextDocument) {
         );
         let range = new vscode.Range(startPosition, endPosition);
         const text = document.getText(range);
-        let res = await formatJs(descriptor.scriptSetup.content);
+        let res = await formatScript(descriptor.scriptSetup.content, descriptor.scriptSetup.lang === 'ts' ? 'babel-ts' : 'babel');
         if (res) {
             let formatText = text.replace(descriptor.scriptSetup.content, `\n${res}`);
             if (formatText && text !== formatText) {
