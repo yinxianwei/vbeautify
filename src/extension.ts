@@ -10,13 +10,11 @@ export function activate(context: vscode.ExtensionContext) {
                 return [];
             }
             let result = await formattingVue(document);
-            editor.edit(editBuilder => {
-                result.forEach(res => {
-                    editBuilder.replace(res.range, res.formatText);
-                });
-            });
+            for (const res of result) {
+                edits.push(vscode.TextEdit.replace(res.range, res.formatText));
+            }
             return edits;
-        },
+        }
     };
 
     context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider('vue', formattingProvider));
